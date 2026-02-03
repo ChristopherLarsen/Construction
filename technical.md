@@ -327,7 +327,7 @@ As the platform grows, separate into independent services with API Gateway coord
 
 ## Development Roadmap
 
-### Phase 1: Foundation (Weeks 1-4)
+### Phase 1: Foundation (Weeks 1)
 
 - Finalize tech stack decisions
 - Set up development environment
@@ -336,7 +336,7 @@ As the platform grows, separate into independent services with API Gateway coord
 - Implement authentication system
 - Build basic user registration/login
 
-### Phase 2: Core Features (Weeks 5-10)
+### Phase 2: Core Features (Weeks 2)
 
 - Develop project submission forms
 - Implement image upload functionality
@@ -345,7 +345,7 @@ As the platform grows, separate into independent services with API Gateway coord
 - Integrate AI estimation service
 - Develop project management dashboard
 
-### Phase 3: Marketplace (Weeks 11-14)
+### Phase 3: Marketplace (Week 3)
 
 - Build tradesman portal
 - Implement quote submission system
@@ -353,7 +353,7 @@ As the platform grows, separate into independent services with API Gateway coord
 - Build notification system
 - Implement membership tiers
 
-### Phase 4: Polish & Launch (Weeks 15-18)
+### Phase 4: Polish & Launch (Week 4)
 
 - Performance optimization
 - Security audit

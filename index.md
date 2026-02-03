@@ -16,6 +16,13 @@ Construction Connect Canada is a nationwide digital platform that revolutionizes
 **Core Value Proposition:**
 Get a detailed construction quote in 20 minutes or less—from initial project description to AI-generated cost estimate and tradesman matching.
 
+## Cost to stand up the business
+- Build it: $9,500-$14,000
+- Time: 4 Weeks
+- Legal: $2,500-$5,000
+- Marketing: TBA
+- Total: $15,500-$22,500
+
 ### Key Differentiators
 
 - **20-minute quote guarantee:** Complete project submission and receive AI estimate in under 20 minutes
