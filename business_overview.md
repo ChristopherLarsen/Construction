@@ -31,29 +31,30 @@ We're starting with these three most common residential renovation projects to p
 
 **Primary Revenue Model:**
 
-1. **Transaction Commissions**
-   - Small commission on each completed job
-   - Commission structure:
-     - Percentage-based fee (e.g., 5-10% of project value)
-     - Charged to tradesman upon project completion
-     - Included in tradesman's quote visibility to clients
+**Who Pays:** Clients pay for all services. Tradesmen receive their full quoted amount; the commission is added on top and paid by the client.
+
+1. **Transaction Commissions (Charged to Client)**
+   - **Standard Rate:** 20% commission on every completed job
+   - **Member Rate:** 10% commission for jobs completed by member tradesmen
+   - Commission is added to the tradesman's quote and clearly displayed to clients
    - Revenue scales with platform activity
 
-2. **Tradesman Membership Fees**
-   - **Free Tier:**
+2. **Tradesman Membership Program**
+   - **Free Tier (Non-Members):**
      - Complete ONE job for free (trial period)
      - Access to basic platform features
      - Standard profile listing
      - Ability to submit quotes on available jobs
-   - **Paid Monthly Membership (Required after first job):**
+     - Jobs completed by non-members incur 20% client commission
+   - **Paid Monthly Membership ($50/month):**
      - Unlimited job access and quote submissions
-     - Pricing: TBD based on market research (estimated $50-150/month)
+     - Jobs completed by members incur only 10% client commission (savings passed to client)
      - Priority listing in search results
      - Enhanced profile with portfolio showcase
      - Advanced analytics and reporting
-     - Faster response to client inquiries
+     - "Member" badge visible to clients
 
-   *Rationale:* One free job allows tradesmen to test the platform, see the quality of leads, and complete a transaction before committing to monthly payments. Creates a low-risk trial that converts to recurring revenue.
+   *Rationale:* The tiered commission structure incentivizes tradesmen to become members (their clients pay less), while the free trial allows them to test the platform before committing. Clients benefit from lower fees when hiring members, creating a preference for member tradesmen.
 
 **Future Revenue Opportunities:**
 
@@ -124,7 +125,6 @@ Our core competitive advantage is delivering detailed, AI-powered construction q
 - Email and phone number entry
 - Password creation
 - Phone verification code (2FA)
-- Optional: Skip to guest mode for even faster start
 
 **Step 2: Project Category Selection (30 seconds)**
 - Simple choice between three options:
@@ -133,7 +133,7 @@ Our core competitive advantage is delivering detailed, AI-powered construction q
   - Bedroom Renovation
 - Each category loads a tailored questionnaire
 
-**Step 3: Smart Project Questionnaire (6-8 minutes)**
+**Step 3: Smart Project Questionnaire (6-10 minutes)**
 
 The questionnaire adapts based on the selected room type:
 
@@ -210,6 +210,19 @@ The questionnaire adapts based on the selected room type:
 
 **Total Time: 13-20 minutes** (including AI processing)
 
+### Demo Mode
+
+For prospective users who want to experience the platform before creating an account, we offer a **Demo Mode**:
+
+- Pre-loaded kitchen renovation project
+- Sample images showing a kitchen with three cabinets
+- Walk-through of the entire estimation process
+- Example AI estimate with full breakdown
+- No account required to explore
+- Clear call-to-action to create account and submit their own project
+
+*Purpose:* Reduces friction for curious users, demonstrates platform value, and builds confidence before commitment.
+
 ### Why 20 Minutes Matters
 
 **Client Benefits:**
@@ -277,6 +290,15 @@ We're starting with kitchens, bathrooms, and bedrooms because:
 - Reduces time wasted on projects outside budget
 - Creates baseline for comparing tradesman quotes
 
+**Important Clarification: AI Estimate vs. Tradesman Quote**
+
+The AI estimate is a **non-binding guideline** designed to:
+- Give clients realistic budget expectations
+- Help tradesmen understand the project scope and price range
+- Serve as a reference point for quote comparison
+
+**The tradesman's quote is the official, binding estimate for the job.** Once a client accepts a tradesman's quote, that becomes the contracted price (subject to change order provisions).
+
 **Process:**
 1. Client describes project through text, voice, or form
 2. Client uploads images of work area
@@ -290,7 +312,31 @@ We're starting with kitchens, bathrooms, and bedrooms because:
 - Anonymous until ready to engage
 - Educational tool for understanding costs
 
-### 2. Tradesman Marketplace
+### 2. Not-to-Exceed Budget Protection
+
+Clients can set a **maximum budget** (not-to-exceed amount) when posting their project:
+
+**How It Works:**
+- Client specifies the maximum they're willing to spend
+- This amount is visible to tradesmen when browsing jobs
+- Tradesmen can choose whether to bid based on the budget
+- All quotes must come in at or below the not-to-exceed amount
+
+**Unrealistic Budget Warning:**
+If the AI determines that a client's not-to-exceed budget is **unreasonably low** for the scope of work requested:
+- The system will display a warning to the client
+- Message: "Based on our analysis, your maximum budget of $X is likely too low for this project scope. It's unlikely tradesmen will submit quotes at this price point."
+- Client can choose to:
+  - Adjust budget upward
+  - Reduce project scope
+  - Proceed anyway (understanding they may receive no bids)
+
+**No-Bid Situations:**
+- If no tradesmen submit quotes within the budget, the client is notified
+- Platform suggests adjusting budget or scope
+- No charge to the client for unmatched projects
+
+### 3. Tradesman Marketplace
 
 **Value Proposition:**
 - Pre-qualified leads with budget expectations
@@ -311,7 +357,7 @@ We're starting with kitchens, bathrooms, and bedrooms because:
 - Direct communication with interested contractors
 - Transparent pricing and timeline estimates
 
-### 3. Multi-Project Management
+### 4. Multi-Project Management
 
 **Client Benefits:**
 - Manage multiple renovation projects simultaneously
@@ -329,7 +375,7 @@ We're starting with kitchens, bathrooms, and bedrooms because:
 - **Completed:** Project finished and paid
 - **Archived:** Historical reference
 
-### 4. Contract Generation & Management
+### 5. Contract Generation & Management
 
 **Value Proposition:**
 Once a client selects a tradesman, the platform generates a professional, legally-structured contract that protects both parties and clearly defines the project scope, costs, and terms.
@@ -343,6 +389,8 @@ Construction Connect Canada provides standardized contract templates that formal
 - **Project Description:** Detailed scope of work based on original submission
 - **Cost Structure:**
   - Base contract price (from accepted quote)
+  - Platform commission (20% standard / 10% member rate)
+  - Total client cost clearly displayed
   - Payment schedule (deposit, milestones, final payment)
   - "Not to Exceed" amount (caps total cost)
   - Change order process and pricing
@@ -545,13 +593,14 @@ Every contract includes a maximum price cap that the contractor cannot exceed wi
 
 #### Phase 2: Exploration
 - Visitor browses website, learns about AI estimation
+- **Tries Demo Mode** to experience the platform without commitment
 - Reviews example estimates and success stories
 - Checks tradesman profiles and ratings
 - Decides to create account
 
 #### Phase 3: Estimation (20-Minute Process)
 - Creates account with email and phone verification (2 minutes)
-- Describes construction project (8-10 minutes):
+- Describes construction project (6-10 minutes):
   - Selects category: Kitchen, Bathroom, or Bedroom
   - Types or dictates project details
   - Uploads photos of current state (3-5 images)
@@ -563,7 +612,7 @@ Every contract includes a maximum price cap that the contractor cannot exceed wi
 - **Total time: Under 20 minutes from start to finished estimate**
 
 #### Phase 4: Hiring Decision
-- Option A: Posts job to receive tradesman quotes
+- Option A: Posts job to receive tradesman quotes (can set not-to-exceed budget)
 - Option B: Adjusts project scope and re-estimates
 - Option C: Saves project as draft for later
 
@@ -573,9 +622,10 @@ Every contract includes a maximum price cap that the contractor cannot exceed wi
 - Checks contractor credentials and ratings
 - Asks clarifying questions
 - Selects preferred tradesman
+- **Note:** Tradesman's quote becomes the official project price
 
 #### Phase 6: Completion
-- Makes payment through platform
+- Makes payment through platform (quote + commission)
 - Work proceeds (outside platform)
 - Marks project as complete
 - Rates tradesman and provides feedback
@@ -598,16 +648,18 @@ Every contract includes a maximum price cap that the contractor cannot exceed wi
 - Filters by:
   - Job type (matches specialty)
   - Location (service radius)
-  - Budget range
+  - Budget range (including not-to-exceed limits)
   - Timeline
 - Reviews AI estimates as pricing reference
+- Sees client's maximum budget (if set)
 
 #### Phase 3: Quote Submission
 - Selects promising jobs
 - Reviews project details and images
-- Prepares competitive quote
+- Prepares competitive quote (using AI estimate as reference)
 - Includes timeline and approach
 - Submits quote through platform
+- **Quote becomes binding price if accepted**
 
 #### Phase 4: Client Engagement
 - Receives notification if quote selected
@@ -617,10 +669,10 @@ Every contract includes a maximum price cap that the contractor cannot exceed wi
 
 #### Phase 5: Project Completion
 - Completes work (off-platform)
-- Receives payment through platform (minus small commission)
+- Receives payment through platform (full quoted amount)
 - Requests client review
 - Builds reputation and ratings
-- **After First Job:** Prompted to upgrade to paid monthly membership to continue accessing jobs
+- **After First Job:** Prompted to upgrade to paid membership ($50/month) to continue accessing jobs and offer clients lower commission rates
 
 ---
 
@@ -664,6 +716,7 @@ Every contract includes a maximum price cap that the contractor cannot exceed wi
 - Multiple payment methods
 - Payment history and receipts
 - Invoice generation
+- Clear display of quote + commission breakdown
 
 ### For Tradesmen
 
@@ -681,6 +734,7 @@ Every contract includes a maximum price cap that the contractor cannot exceed wi
 - Job alerts for new matches
 - AI estimate visibility
 - Client location and project details
+- Not-to-exceed budget visibility
 
 **Quote Management**
 - Quote builder with templates
@@ -705,6 +759,7 @@ Every contract includes a maximum price cap that the contractor cannot exceed wi
 - New tradesman registrations per month
 - Client acquisition cost (CAC)
 - Tradesman acquisition cost
+- Demo mode to registration conversion rate
 
 ### Engagement
 - Projects submitted per month
@@ -721,15 +776,17 @@ Every contract includes a maximum price cap that the contractor cannot exceed wi
 ### Quality
 - Client satisfaction score (CSAT)
 - Tradesman satisfaction score
-- AI estimate accuracy (vs. actual costs)
+- AI estimate accuracy (vs. actual tradesman quotes)
 - Average time from post to hire
 - Project completion rate
 - Dispute resolution rate
+- No-bid rate (budget too low)
 
 ### Financial
 - Monthly recurring revenue (MRR)
 - Transaction volume
 - Average transaction value
+- Average commission per job
 - Customer lifetime value (CLV)
 - Payment processing success rate
 
@@ -770,7 +827,7 @@ Every contract includes a maximum price cap that the contractor cannot exceed wi
 - Focus on larger construction projects
 - More comprehensive project management
 - AI estimation for better planning
-- Lower contractor fees
+- Competitive contractor fees (10% for members)
 
 ### UrbanTasker
 **Strengths:**

@@ -9,27 +9,63 @@ This document outlines the technical specifications and implementation requireme
 ## Technology Stack
 
 ### Frontend
-- **Framework:** React/Next.js
-- **Language:** TypeScript (recommended)
-- **Styling:** CSS-in-JS or Tailwind CSS
-- **State Management:** TBD (Redux, Zustand, or React Context)
-- **Form Handling:** React Hook Form or Formik
+- **Framework:** React with Next.js 14+ (App Router)
+- **Language:** TypeScript (strongly recommended for type safety)
+- **Styling:** Tailwind CSS (rapid development, consistency, performance)
+- **State Management:** React Context + Zustand (lightweight, scales well)
+- **Form Handling:** React Hook Form (performance optimized, great DX)
+- **UI Components:** shadcn/ui (accessible, customizable components)
 
 ### Backend
-- **API:** RESTful or GraphQL
-- **Language:** Node.js/TypeScript or alternative
-- **Framework:** TBD (Express, NestJS, Next.js API routes)
+- **Architecture:** Modular Monolith (initially), microservices-ready
+- **API Style:** RESTful API with Next.js API routes
+- **Language:** Node.js with TypeScript
+- **Framework:** Next.js 14+ API Routes (unified codebase) + Express for standalone services
+- **Job Queue:** BullMQ with Redis (for AI estimation processing)
+- **Real-time:** WebSockets or Server-Sent Events (for notifications)
 
 ### Database
-- **Primary Database:** TBD (PostgreSQL, MySQL, or MongoDB)
-- **Caching Layer:** Redis (recommended)
-- **Search:** Elasticsearch or similar (for job matching)
+- **Primary Database:** **PostgreSQL 15+** (RECOMMENDED)
+  - **Rationale:**
+    - ACID compliance critical for payment transactions
+    - Excellent relational data modeling for users, projects, quotes
+    - Advanced JSON support for flexible metadata
+    - Strong full-text search capabilities
+    - Proven scalability and reliability
+    - Robust transaction handling for financial operations
+    - Wide hosting support on AWS RDS
+  - **Schema Management:** Prisma ORM (type-safe, migrations, great DX)
+- **Caching Layer:** Redis 7+ (session storage, job queue, API caching)
+- **Search Enhancement:** PostgreSQL full-text search initially, Elasticsearch if needed at scale
 
-### Infrastructure
-- **Hosting:** TBD (AWS, Google Cloud, Azure, or Vercel)
-- **CDN:** CloudFront, Cloudflare, or similar
-- **Image Storage:** S3, Google Cloud Storage, or Cloudinary
-- **Monitoring:** TBD (DataDog, New Relic, or similar)
+### Infrastructure & Hosting
+- **Primary Hosting:** **Amazon Web Services (AWS)** (RECOMMENDED)
+  - **Rationale:**
+    - **Scalability:** Easily scale from startup to enterprise
+    - **Reliability:** 99.99% uptime SLA, proven infrastructure
+    - **Ecosystem:** Complete suite of services (compute, storage, database, queues)
+    - **Cost-effective:** Pay-as-you-grow model ideal for startup phase
+    - **Canadian presence:** AWS Canada (Central) region for data sovereignty
+    - **Superior to Hostinger:** Hostinger is for basic web hosting, not production SaaS platforms
+
+  - **AWS Service Stack:**
+    - **Compute:** EC2 (application servers) or ECS/Fargate (containerized)
+    - **Database:** RDS for PostgreSQL (managed, automated backups)
+    - **Storage:** S3 (images, documents, backups)
+    - **CDN:** CloudFront (fast image/asset delivery globally)
+    - **Queue:** SQS (message queuing for job processing)
+    - **Notifications:** SNS (SMS for 2FA, email/SMS notifications)
+    - **Secrets:** AWS Secrets Manager (API keys, database credentials)
+    - **Monitoring:** CloudWatch (logs, metrics, alarms)
+    - **Load Balancing:** Application Load Balancer (high availability)
+
+- **Alternative for MVP:** Vercel (frontend) + AWS (backend services)
+  - Next.js deployment optimized on Vercel
+  - Backend services and database on AWS
+  - Easier initial setup, migrate fully to AWS as needed
+
+- **CDN:** CloudFront (included with AWS, or Cloudflare for additional DDoS protection)
+- **Monitoring:** AWS CloudWatch + Sentry (error tracking)
 
 ---
 
@@ -197,25 +233,75 @@ This document outlines the technical specifications and implementation requireme
 
 ### 1. Payment Processing
 
-**Selected Service:** TBD (Stripe, Square, PayPal, or Canadian provider)
+**Selected Service:** **Stripe** (RECOMMENDED for Canadian Operations)
 
-**Requirements:**
-- PCI DSS compliance (handled by payment processor)
-- Support for credit/debit cards
-- Support for ACH/bank transfers (optional)
-- Recurring billing for tradesman memberships
-- One-time payments for project completion
-- Refund handling
-- Invoice generation
-- Transaction history
-- Webhook handling for payment events
+**Why Stripe over PayPal:**
+- **Superior for Canadian Market:**
+  - Excellent support for Canadian businesses
+  - Competitive pricing: 2.9% + $0.30 CAD per transaction
+  - Full support for Canadian bank accounts and cards
+  - Local CAD processing (no currency conversion required)
+  - Strong presence in Ontario and across Canada
 
-**API Integration:**
-- Payment intent creation
-- Payment confirmation
-- Subscription management
-- Webhook endpoints for status updates
-- Secure token handling (never store card data)
+- **Technical Advantages:**
+  - **Best-in-class API:** Comprehensive, well-documented, developer-friendly
+  - **Stripe Connect:** Purpose-built for marketplace platforms (perfect for tradesman payouts)
+  - **Webhook reliability:** Robust event system for payment tracking
+  - **Subscription management:** Native recurring billing for tradesman memberships ($50/month)
+  - **Payment intents:** Modern, secure payment flow with SCA compliance
+  - **Fraud prevention:** Built-in Radar fraud detection
+
+- **Business Features:**
+  - **Split payments:** Easily handle commission structure (20% standard / 10% member)
+  - **Payouts:** Automated payouts to tradesmen after job completion
+  - **Invoicing:** Built-in invoice generation
+  - **Reporting:** Comprehensive financial dashboards
+  - **Refunds:** Simple refund handling via API or dashboard
+
+- **vs PayPal:**
+  - PayPal charges similar or higher fees (2.9% + $0.30, but often higher for business accounts)
+  - Stripe has superior developer experience and documentation
+  - Stripe Connect specifically designed for marketplaces
+  - Better webhook reliability and testing tools
+  - More transparent pricing, no hidden fees
+  - Stripe checkout is cleaner and more customizable
+
+**Implementation Requirements:**
+- PCI DSS compliance (handled entirely by Stripe)
+- Support for credit/debit cards (Visa, Mastercard, Amex)
+- Support for Canadian bank accounts (EFT/ACH payments via Stripe)
+- Recurring billing for tradesman memberships using Stripe Subscriptions
+- One-time payments for project completion using Payment Intents
+- Refund handling via Stripe API
+- Invoice generation using Stripe Invoicing
+- Transaction history via Stripe Dashboard and API
+- Webhook handling for payment events (payment.succeeded, payment.failed, etc.)
+
+**Stripe API Integration:**
+- **Payment Intents:** For one-time project payments
+- **Setup Intents:** For saving payment methods
+- **Subscriptions:** For tradesman monthly memberships ($50/month)
+- **Stripe Connect:** For marketplace payment splitting and tradesman payouts
+  - Use "Separate Charges and Transfers" model for commission structure
+  - Platform retains commission, transfers remaining amount to tradesman
+- **Webhook endpoints:** For real-time payment status updates
+- **Secure token handling:** Never store card data, use Stripe tokens only
+- **Customer portal:** For managing subscriptions and payment methods
+
+**Payment Flow Example:**
+1. Client accepts tradesman quote for $10,000
+2. Platform calculates total: $10,000 (to tradesman) + $2,000 (20% commission) = $12,000
+3. Client pays $12,000 via Stripe Payment Intent
+4. Platform holds funds temporarily
+5. Upon project completion, Stripe transfers $10,000 to tradesman's connected account
+6. Platform retains $2,000 commission automatically
+
+**Cost Structure:**
+- Per-transaction fee: 2.9% + $0.30 CAD
+- Stripe Connect fee: +0.5% for marketplace transactions (worth it for functionality)
+- No monthly fees, no setup fees
+- No hidden costs
+- Volume discounts available as platform grows
 
 ### 2. AI-Powered Cost Estimation
 
