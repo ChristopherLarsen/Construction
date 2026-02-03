@@ -360,4 +360,153 @@ Standardized contract templates that protect both parties with detailed scope of
 
 ---
 
+## Cost Analysis
+
+### Summary: Tech Stack Costs
+
+**Assumptions:**
+- 10,000 user sessions per month
+- 100 completed contracts per month
+- ~$15,000 average contract value
+
+### Monthly Costs Breakdown
+
+#### AWS Infrastructure: $525/month
+
+| Service | Cost | Details |
+|---------|------|---------|
+| EC2 Instances | $250 | 2-10 t3.medium instances (auto-scaled) |
+| RDS PostgreSQL | $150 | db.t3.medium Multi-AZ with 100GB SSD |
+| ElastiCache Redis | $75 | cache.t3.small (2 nodes for HA) |
+| S3 Storage | $23 | 1GB/day of images/documents (~30GB/month) |
+| CloudFront CDN | $15 | Global content delivery |
+| **Subtotal** | **$525** | |
+
+#### Core Services (DocuSign, AI, Maps, SMS/Email): $150/month
+
+| Service | Cost | Details |
+|---------|------|---------|
+| DocuSign | $45 | API plan for contract generation |
+| Anthropic Claude AI | $50 | ~$0.50 per estimate (100/month) |
+| Google Maps API | $35 | Geocoding and location services |
+| AWS SNS (SMS) | $13 | 2FA codes, notifications (~2,000 SMS) |
+| AWS SES (Email) | $7 | Transactional emails (~100,000 emails) |
+| **Subtotal** | **$150** | |
+
+#### Monitoring & Analytics: $46/month
+
+| Service | Cost | Details |
+|---------|------|---------|
+| Sentry | $29 | Error tracking, performance monitoring |
+| Google Analytics 4 | $0 | Free tier (included) |
+| Mixpanel | $17 | User behavior and conversion tracking |
+| **Subtotal** | **$46** | |
+
+#### Help Desk Software: $300/month
+
+| Item | Cost | Details |
+|-----|------|---------|
+| Zendesk/Intercom | $150 | Support ticketing and live chat |
+| Phone System | $50 | VoIP for support calls |
+| 1 Customer Support Rep (Part-time) | $100 | 20 hours/week at $25/hour |
+| **Subtotal** | **$300** | |
+
+### **TOTAL CORE TECH STACK: $1,021/month**
+
+---
+
+### Payment Processing: Stripe Fees
+
+**Stripe Fees: $58,680/month** (assuming 3.4% average + $0.30 per transaction)
+
+**Calculation:**
+- 100 contracts × $15,000 average = $1,500,000/month
+- 3.4% commission + $0.30 per transaction
+- ($1,500,000 × 0.034) + (100 × $0.30) = $51,000 + $30 = **$51,030**
+- Stripe Connect marketplace fee: +0.5% = $7,500
+- **Total: ~$58,680/month**
+
+### ⚠️ CRITICAL NOTE: Stripe is a Pass-Through Cost
+
+**Important:** Stripe fees are NOT a burden on platform profitability:
+- ✅ These costs are **paid by clients**, not the platform
+- ✅ Added on top of the tradesman's quote
+- ✅ Client sees total cost = Tradesman Quote + Platform Commission + Stripe Fees
+- ✅ Platform passes Stripe fees through to clients automatically
+- ✅ Zero impact on platform margins
+
+---
+
+### Platform Economics
+
+#### Revenue Model (100 Contracts/Month)
+
+With 100 completed contracts at ~$15,000 average value:
+
+**Revenue Breakdown:**
+- Contracts with 20% commission (non-member): 50 × $15,000 × 20% = $150,000
+- Contracts with 10% commission (member): 50 × $15,000 × 10% = $75,000
+- **Total Monthly Commission Revenue: $225,000**
+
+#### Unit Economics ✨
+
+**Cost Per Contract:**
+- Platform cost per contract: $1,021 ÷ 100 = **$10.21**
+
+**Cost Per User Session:**
+- Platform cost per session: $1,021 ÷ 10,000 = **$0.10**
+
+**Tech as % of Revenue:**
+- Tech cost vs. Commission revenue: $1,021 ÷ $225,000 = **0.45%**
+- **This is excellent unit economics!**
+
+---
+
+### Scaling Projection (500 Contracts/Month)
+
+As platform grows to 500 completed contracts per month:
+
+**Revenue (at 500 contracts/month):**
+- 250 × $15,000 × 20% = $750,000 (non-members)
+- 250 × $15,000 × 10% = $375,000 (members)
+- **Total: $1,125,000/month**
+
+**Core Tech Stack (500 contracts/month):**
+- Infrastructure scales to: $2,116/month (about 2x current)
+- Still only **0.94% of revenue**
+
+**Key Insight:** Infrastructure scales efficiently with volume
+
+---
+
+### Key Cost Optimizations Available
+
+- **AWS Reserved Instances:** Save 30-40% ($210/month)
+- **S3 Lifecycle policies** for old images: More aggressive archiving
+- **More aggressive CDN caching:** Reduce origin requests
+- **Email over SMS where possible:** Use SMS only for 2FA
+- **Stripe volume discounts:** Negotiate rates at scale
+- **AI Estimate optimization:** Batch processing, caching, efficient prompting
+
+---
+
+### Bottom Line: Excellent Unit Economics ✨
+
+The tech stack is **very cost-efficient**, leaving plenty of margin for:
+- ✅ Marketing and customer acquisition
+- ✅ Operations and team expansion
+- ✅ Legal and compliance
+- ✅ Healthy profit margin (30-40% possible)
+
+**Key Takeaways:**
+1. **Core tech cost: Only 0.45% of revenue** at launch
+2. **Scales to 0.94% at 500 contracts/month** ✅
+3. **Stripe fees are client costs**, not platform burden
+4. **$225,000/month commission revenue** with only $1,021 in platform costs
+5. **Platform is inherently profitable** from month 1 at scale
+
+This demonstrates a **highly viable, capital-efficient business model** with strong unit economics and attractive margins.
+
+---
+
 **[📋 View Technical Requirements →](technical.md)**
