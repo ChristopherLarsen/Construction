@@ -1,0 +1,23 @@
+title: Construction Connect Canada
+description: Building connections in the construction industry
+theme: minima
+
+author:
+  name: Christopher Larsen
+  email: contact@constructionconnect.ca
+
+# Minima theme settings
+minima:
+  skin: auto
+  social_links:
+    - platform: github
+      user_url: "https://github.com/ChristopherLarsen"
+
+# Enable plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Jekyll settings
+markdown: kramdown
+permalink: /:title/
