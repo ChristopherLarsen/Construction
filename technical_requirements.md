@@ -6,6 +6,94 @@ This document outlines the technical specifications and implementation requireme
 
 ---
 
+## Executive Summary: Key Technical Decisions
+
+This section provides a quick reference for all major technology choices and architectural decisions.
+
+### Platform Foundation
+- **Architecture:** Modular Monolith (MVP) → Microservices (Scale)
+- **Frontend Framework:** Next.js 14+ with React, TypeScript, Tailwind CSS
+- **Backend:** Node.js/TypeScript with Next.js API routes
+- **Database:** PostgreSQL 15+ with Prisma ORM
+- **Hosting:** Amazon Web Services (AWS)
+- **Primary Region:** AWS Canada (Central) for data sovereignty
+
+### Core Service Providers
+
+| Service Category | Provider | Rationale |
+|-----------------|----------|-----------|
+| **Payment Processing** | **Stripe** | Best-in-class API, Stripe Connect for marketplace, superior for subscriptions, 2.9% + $0.30 CAD |
+| **Digital Signatures** | **DocuSign** | Industry standard, legally binding in Canada, comprehensive features |
+| **AI Estimation** | **Anthropic Claude 3.5 Sonnet** | Superior reasoning, vision capabilities, 200K context, cost-effective |
+| **Object Storage** | **AWS S3** | Reliable, scalable, cost-effective ($0.023/GB/month), integrates with CloudFront |
+| **CDN** | **AWS CloudFront** | Fast global delivery, integrated with S3, included with AWS |
+| **Database Hosting** | **AWS RDS PostgreSQL** | Managed, automated backups, Multi-AZ high availability |
+| **Cache & Queue** | **Redis (ElastiCache)** | Session storage, API caching, job queue (BullMQ) |
+| **SMS (2FA)** | **AWS SNS** | Cost-effective ($0.00645/SMS), reliable delivery |
+| **Email (Transactional)** | **AWS SES** | Low cost ($0.10/1000 emails), high deliverability |
+| **Maps/Location** | **Google Maps API** | Best-in-class for geocoding and location services |
+| **Error Tracking** | **Sentry** | Real-time debugging, performance monitoring |
+| **Analytics** | **Google Analytics 4 + Mixpanel** | User behavior, conversion tracking |
+
+### Infrastructure Stack (AWS)
+
+```
+Application Tier:    2-10x EC2 t3.medium (Auto-scaled, Load Balanced)
+Database Tier:       RDS PostgreSQL db.t3.medium (Multi-AZ, 100GB SSD)
+Cache/Queue Tier:    ElastiCache Redis cache.t3.small (2 nodes)
+Storage Tier:        S3 Standard (images, documents, backups)
+CDN:                 CloudFront (global edge locations)
+Background Jobs:     Separate EC2 instances or ECS (BullMQ workers)
+Monitoring:          CloudWatch, Sentry, UptimeRobot
+
+Estimated Cost:      $300-500/month for MVP/moderate traffic
+Scaling Cost:        $1,000-2,000/month at 10,000 active users
+```
+
+### Why These Choices?
+
+**Why AWS over Hostinger?**
+- Hostinger is basic shared hosting, not suitable for SaaS platforms
+- AWS provides complete ecosystem: compute, database, storage, queuing, monitoring
+- Proven scalability from startup to enterprise
+- 99.99% uptime SLA vs shared hosting unpredictability
+- Canadian data center for compliance and performance
+- Pay-as-you-grow pricing model
+
+**Why Stripe over PayPal?**
+- Stripe Connect purpose-built for marketplaces (perfect for platform commission model)
+- Superior developer experience and API documentation
+- Native subscription management for tradesman memberships ($50/month)
+- Better webhook reliability and testing tools
+- More transparent pricing with no hidden fees
+- Easier to implement split payments (platform commission + tradesman payout)
+
+**Why PostgreSQL over MySQL/MongoDB?**
+- ACID compliance critical for financial transactions
+- Superior relational data modeling for complex user/project/quote relationships
+- Built-in JSON support for flexible metadata
+- Excellent full-text search capabilities
+- Better performance for complex queries and joins
+- Stronger data integrity guarantees
+
+**Why Anthropic Claude over OpenAI?**
+- Superior structured reasoning for cost breakdowns
+- 200K token context window (vs GPT-4's 128K)
+- Excellent vision capabilities for analyzing project images
+- More consistent JSON structured outputs
+- Competitive pricing
+- No data residency concerns for Canadian operations
+
+**Why DocuSign?**
+- Industry-standard for construction contracts
+- Legal validity recognized in Canadian courts
+- Professional appearance enhances platform credibility
+- Comprehensive API for full automation
+- Audit trail and tamper-evident seals
+- Trusted brand reduces friction
+
+---
+
 ## Technology Stack
 
 ### Frontend
@@ -66,6 +154,213 @@ This document outlines the technical specifications and implementation requireme
 
 - **CDN:** CloudFront (included with AWS, or Cloudflare for additional DDoS protection)
 - **Monitoring:** AWS CloudWatch + Sentry (error tracking)
+
+---
+
+## Server Architecture
+
+### Recommended Architecture: Modular Monolith (Phase 1) → Microservices (Phase 2+)
+
+**Phase 1: Modular Monolith (Launch through first 10,000 users)**
+
+Start with a well-structured monolithic application that's designed for future separation:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     Next.js Application                      │
+├─────────────────────────────────────────────────────────────┤
+│  Frontend (React)          │  API Routes (Backend)          │
+│  - Client Portal           │  - Authentication              │
+│  - Tradesman Portal        │  - Project Management          │
+│  - Admin Dashboard         │  - Payment Processing          │
+└────────────────────────────┴────────────────────────────────┘
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+        ▼                     ▼                     ▼
+┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│  PostgreSQL  │    │    Redis     │    │     AWS      │
+│   Database   │    │  Cache/Queue │    │  S3 Storage  │
+└──────────────┘    └──────────────┘    └──────────────┘
+                            │
+                            ▼
+                  ┌──────────────────┐
+                  │  Job Processor   │
+                  │  (BullMQ Worker) │
+                  │  - AI Estimation │
+                  │  - Notifications │
+                  └──────────────────┘
+                            │
+        ┌───────────────────┼───────────────────┐
+        │                   │                   │
+        ▼                   ▼                   ▼
+┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+│    Stripe    │  │   DocuSign   │  │  AWS SNS/SES │
+│   Payments   │  │  Signatures  │  │ Notifications│
+└──────────────┘  └──────────────┘  └──────────────┘
+```
+
+**Architecture Benefits:**
+- **Simplicity:** Single codebase, easier to develop and debug
+- **Shared Code:** Reuse logic between frontend and backend
+- **Fast Development:** Rapid feature iteration in early stage
+- **Lower Costs:** Single application server, minimal infrastructure
+- **Modular Design:** Clear domain boundaries enable future separation
+
+**Core Modules:**
+1. **Authentication Module** - User auth, session management, 2FA
+2. **User Module** - Profile management, role-based access
+3. **Project Module** - Project CRUD, status management
+4. **Estimation Module** - AI integration, job queue
+5. **Marketplace Module** - Job listing, quote submission
+6. **Payment Module** - Stripe integration, transaction handling
+7. **Contract Module** - DocuSign integration, document generation
+8. **Notification Module** - Email, SMS, in-app notifications
+9. **Admin Module** - Dashboard, analytics, user management
+
+**Deployment Configuration (AWS):**
+- **Compute:** 2x EC2 t3.medium instances (load balanced)
+- **Database:** RDS PostgreSQL db.t3.medium (Multi-AZ for HA)
+- **Cache/Queue:** ElastiCache Redis t3.small
+- **Storage:** S3 Standard for images/documents
+- **CDN:** CloudFront distribution
+- **Load Balancer:** Application Load Balancer
+- **Estimated Cost:** $300-500/month for moderate traffic
+
+---
+
+### Phase 2: Microservices Architecture (Scale beyond 50,000 users)
+
+As the platform grows, separate into independent services:
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│                    API Gateway (Kong/AWS ALB)                  │
+└───────┬────────┬──────────┬──────────┬──────────┬──────────────┘
+        │        │          │          │          │
+        ▼        ▼          ▼          ▼          ▼
+┌──────────┐ ┌────────┐ ┌────────┐ ┌────────┐ ┌──────────┐
+│   Auth   │ │Project │ │Payment │ │AI Est. │ │Contract  │
+│ Service  │ │Service │ │Service │ │Service │ │ Service  │
+└──────────┘ └────────┘ └────────┘ └────────┘ └──────────┘
+     │           │           │          │           │
+     ▼           ▼           ▼          ▼           ▼
+┌────────┐  ┌────────┐  ┌────────┐ ┌───────┐  ┌────────┐
+│ User DB│  │Proj DB │  │  RDS   │ │ Redis │  │  S3    │
+└────────┘  └────────┘  └────────┘ └───────┘  └────────┘
+```
+
+**When to Migrate:**
+- Traffic exceeds single server capacity (>10,000 DAU)
+- Need independent scaling of AI estimation service
+- Team size grows beyond 10 developers
+- Database queries slow despite optimization
+- Feature development conflicts in monolith
+
+**Migration Path:**
+1. Extract AI Estimation Service first (highest computational load)
+2. Extract Payment Service (for PCI isolation)
+3. Extract Contract Service (DocuSign integration)
+4. Keep core monolith for remaining features
+
+---
+
+### Infrastructure Components
+
+**1. Application Servers (EC2)**
+- **Purpose:** Run Next.js application
+- **Configuration:**
+  - Instance Type: t3.medium (2 vCPU, 4GB RAM) initially
+  - Auto Scaling: 2-10 instances based on traffic
+  - OS: Ubuntu 22.04 LTS or Amazon Linux 2
+- **Scaling Strategy:** Horizontal scaling with Application Load Balancer
+
+**2. Database (RDS PostgreSQL)**
+- **Purpose:** Primary data store
+- **Configuration:**
+  - Instance: db.t3.medium (2 vCPU, 4GB RAM) initially
+  - Storage: 100GB SSD (gp3), auto-scaling enabled
+  - Multi-AZ: Yes (high availability)
+  - Automated backups: Daily, 30-day retention
+- **Connection Pooling:** PgBouncer for efficient connections
+
+**3. Cache & Queue (ElastiCache Redis)**
+- **Purpose:** Session storage, API caching, job queue
+- **Configuration:**
+  - Node Type: cache.t3.small (2 nodes for HA)
+  - Persistence: Enabled for queue durability
+- **Use Cases:**
+  - Session storage (JWT refresh tokens)
+  - API response caching (job listings, public profiles)
+  - BullMQ job queue (AI estimation jobs)
+  - Rate limiting data
+
+**4. Object Storage (S3)**
+- **Purpose:** Image and document storage
+- **Buckets:**
+  - `ccc-project-images-prod`: Project photos
+  - `ccc-contracts-prod`: Signed contracts
+  - `ccc-backups-prod`: Database backups
+- **Configuration:**
+  - Lifecycle policies: Move to Glacier after 90 days
+  - Versioning: Enabled for contracts
+  - Encryption: AES-256 at rest
+- **Cost Optimization:** CloudFront CDN reduces S3 bandwidth costs
+
+**5. Content Delivery (CloudFront)**
+- **Purpose:** Fast global content delivery
+- **Configuration:**
+  - Origin: S3 buckets and EC2 load balancer
+  - Edge locations: Global
+  - Cache behavior: 1 hour for images, no cache for API
+  - SSL/TLS: Certificate via AWS ACM
+
+**6. Background Jobs (BullMQ Workers)**
+- **Purpose:** Async processing (AI estimation, notifications)
+- **Deployment:** Separate EC2 instances or ECS containers
+- **Configuration:**
+  - Separate worker processes from web servers
+  - Auto-scaling based on queue depth
+  - Graceful shutdown handling
+- **Job Types:**
+  - AI estimation requests
+  - Email/SMS notifications
+  - Image processing (thumbnails, compression)
+  - Contract generation
+
+**7. Monitoring & Logging**
+- **CloudWatch:** Application logs, metrics, alarms
+- **Sentry:** Error tracking and debugging
+- **Custom Metrics:** Job queue depth, AI estimation time, payment success rate
+- **Alarms:** High error rate, long queue times, database CPU >80%
+
+---
+
+### Scalability Considerations
+
+**Database Scaling:**
+1. **Vertical Scaling:** Upgrade RDS instance (up to db.r6g.4xlarge: 16 vCPU, 128GB)
+2. **Read Replicas:** Add 1-3 read replicas for report queries
+3. **Connection Pooling:** PgBouncer to handle 1000+ concurrent connections
+4. **Query Optimization:** Proper indexing, query analysis with EXPLAIN
+5. **Partitioning:** Partition large tables (projects, images) by date if needed
+
+**Application Scaling:**
+1. **Horizontal Scaling:** Auto-scale from 2 to 20+ EC2 instances
+2. **Container Migration:** Move to ECS/Fargate for better resource utilization
+3. **CDN Caching:** Offload 80%+ of static content to CloudFront
+4. **API Caching:** Redis caching for frequent queries (job listings)
+
+**Job Queue Scaling:**
+1. **Multiple Workers:** Scale worker processes independently
+2. **Priority Queues:** Paid members get higher priority
+3. **Rate Limiting:** Respect AI service rate limits
+4. **Retry Logic:** Exponential backoff for failed jobs
+
+**Geographic Expansion:**
+1. **Multi-Region:** Deploy to additional AWS regions (US West, US East for future)
+2. **Data Residency:** Keep Canadian data in Canada (Central) region
+3. **Global CDN:** CloudFront edge locations worldwide
 
 ---
 
@@ -303,9 +598,113 @@ This document outlines the technical specifications and implementation requireme
 - No hidden costs
 - Volume discounts available as platform grows
 
-### 2. AI-Powered Cost Estimation
+### 2. Contract Generation & Digital Signatures
 
-**Selected Service:** TBD (OpenAI, Anthropic, custom ML model, or specialized construction estimation API)
+**Selected Service:** **DocuSign** (Industry Standard for Digital Signatures)
+
+**Why DocuSign:**
+- **Legal Validity:** Legally binding e-signatures compliant with Canadian ESIGN and PIPEDA laws
+- **Industry Standard:** Widely trusted and recognized in construction industry
+- **Professional Appearance:** Enhances platform credibility
+- **Comprehensive Features:** Beyond just signatures (templates, workflows, authentication)
+- **Enterprise-Ready:** Scales from startup to enterprise
+- **Canadian Support:** Strong presence and compliance in Canada
+
+**Use Case in Platform:**
+Once a client selects a tradesman and both parties agree on terms, the platform generates a professional construction contract and sends it to both parties for digital signature via DocuSign.
+
+**Implementation Requirements:**
+
+**DocuSign API Integration:**
+- **API Authentication:** OAuth 2.0 for secure access
+- **Envelope Creation:** Programmatically create signature requests
+- **Template Management:** Store contract templates in DocuSign
+- **Webhook Events:** Track signature status (sent, viewed, signed, completed)
+- **Document Generation:** Populate templates with project-specific data
+- **Multi-Signer Support:** Client and tradesman both sign the same document
+
+**Contract Workflow:**
+1. **Contract Generation:**
+   - Client accepts tradesman's quote
+   - Platform generates contract from template
+   - Auto-populates: project details, pricing, timeline, terms
+   - Includes platform commission breakdown
+   - Adds "not-to-exceed" clauses and payment schedule
+
+2. **DocuSign Envelope Creation:**
+   - Platform creates DocuSign envelope via API
+   - Uploads generated contract PDF
+   - Defines signature fields for client and tradesman
+   - Sets signing order (typically client first, then tradesman)
+   - Adds required fields (date, initials, full signature)
+
+3. **Signature Request:**
+   - DocuSign sends email to client with link to review and sign
+   - Client reviews contract, acknowledges terms, signs digitally
+   - After client signs, DocuSign automatically sends to tradesman
+   - Tradesman reviews and signs
+   - Platform receives webhook notifications at each step
+
+4. **Completed Contract:**
+   - Both parties receive fully executed PDF copy via email
+   - Platform stores signed contract in database
+   - Contract accessible through user dashboards
+   - Immutable record with audit trail
+
+**Technical Implementation:**
+- **DocuSign Node.js SDK:** For seamless API integration
+- **Template Variables:** Dynamic field mapping (project_name, cost, timeline, etc.)
+- **Webhook Endpoint:** `/api/webhooks/docusign` for status updates
+- **Status Tracking:** Real-time updates in project dashboard
+- **Document Storage:** Store signed PDFs in AWS S3 for long-term access
+- **Notification Integration:** Email/SMS alerts when signature required or completed
+
+**DocuSign Features to Leverage:**
+- **Templates:** Pre-configured contract templates for different project types
+- **Conditional Logic:** Show/hide fields based on contract type
+- **Payment Tabs:** Optional integration with DocuSign Payments
+- **Certificate of Completion:** Legal audit trail for all signatures
+- **Mobile Signing:** Responsive signing experience on any device
+- **Authentication:** SMS or email verification for signer identity
+
+**Cost Considerations:**
+- **DocuSign Pricing:** Plans start at ~$40-60 USD/month for API access
+- **Per-Envelope Costs:** Typically included in plan or minimal per-document fee
+- **Scaling:** Higher-tier plans as transaction volume grows
+- **ROI:** Essential for legal protection and professional service delivery
+
+**Alternative Consideration:**
+- **HelloSign (Dropbox Sign):** Lower cost alternative, good API
+- **PandaDoc:** Contract + e-signature + payment in one platform
+- **Recommendation:** Stick with DocuSign for brand trust and comprehensive features
+
+**Data Flow:**
+```
+Project Award → Contract Generation → DocuSign API Call → Envelope Created →
+Email to Signers → Client Signs → Tradesman Signs → Webhook to Platform →
+Completed PDF Stored → Both Parties Notified
+```
+
+**Security & Compliance:**
+- All signatures legally binding under Canadian law
+- Full audit trail (who signed, when, from what IP)
+- Tamper-evident seal on completed documents
+- Encrypted document transmission and storage
+- PIPEDA compliant data handling
+
+### 3. AI-Powered Cost Estimation
+
+**Selected Service:** **Anthropic Claude 3.5 Sonnet** (RECOMMENDED) or OpenAI GPT-4
+
+**Why Anthropic Claude:**
+- **Superior Reasoning:** Excellent at structured analysis and cost breakdowns
+- **Long Context:** 200K token window handles extensive project details and images
+- **Vision Capabilities:** Analyzes uploaded project images for accurate estimates
+- **Structured Output:** Reliable JSON responses for cost breakdowns
+- **Cost-Effective:** Competitive pricing vs OpenAI
+- **Canadian Operations:** No data residency issues
+
+**Alternative:** OpenAI GPT-4 Vision (proven, widely adopted, slightly higher cost)
 
 **Data Flow:**
 1. Client submits project form with details and images
@@ -333,9 +732,9 @@ This document outlines the technical specifications and implementation requireme
 - Version tracking for model updates
 - A/B testing for estimate accuracy
 
-### 3. Image Upload & Storage
+### 4. Image Upload & Storage
 
-**Selected Service:** TBD (AWS S3, Google Cloud Storage, Cloudinary, or similar)
+**Selected Service:** **AWS S3** (RECOMMENDED) + CloudFront CDN
 
 **Requirements:**
 - Drag-and-drop upload interface
@@ -357,7 +756,7 @@ This document outlines the technical specifications and implementation requireme
 - Lazy loading for image galleries
 - Responsive image serving (different sizes for different devices)
 
-### 4. Multi-Project Management
+### 5. Multi-Project Management
 
 **Technical Requirements:**
 - Efficient database queries with proper indexing
@@ -374,7 +773,7 @@ This document outlines the technical specifications and implementation requireme
 - Index on `created_at` for chronological sorting
 - Full-text search index on project descriptions (optional)
 
-### 5. Voice Dictation
+### 6. Voice Dictation
 
 **Implementation:**
 - Web Speech API (browser-based, free)
@@ -491,20 +890,83 @@ This document outlines the technical specifications and implementation requireme
 
 ## Third-Party Integrations
 
-### Required Integrations
-1. **Payment Processor:** Stripe/Square/PayPal
-2. **AI Service:** OpenAI/Anthropic/Custom ML
-3. **Cloud Storage:** AWS S3/GCS/Cloudinary
-4. **SMS Service:** Twilio/AWS SNS (for 2FA and notifications)
-5. **Email Service:** SendGrid/AWS SES/Mailgun
-6. **Maps API:** Google Maps (for location services)
+### Core Integrations (Required)
 
-### Optional Integrations
-- Analytics: Google Analytics, Mixpanel, Amplitude
-- Error Tracking: Sentry, Rollbar, Bugsnag
-- Monitoring: DataDog, New Relic, Grafana
-- CDN: CloudFront, Cloudflare
-- Search: Algolia, Elasticsearch
+1. **Payment Processor: Stripe**
+   - **Purpose:** Transaction processing, subscriptions, marketplace payouts
+   - **Pricing:** 2.9% + $0.30 CAD per transaction, +0.5% for Connect
+   - **API:** Stripe Node.js SDK v14+
+   - **Features:** Payment Intents, Subscriptions, Connect (marketplace)
+   - **Documentation:** https://stripe.com/docs
+
+2. **Digital Signatures: DocuSign**
+   - **Purpose:** Contract generation and e-signature workflow
+   - **Pricing:** ~$40-60 USD/month for API access
+   - **API:** DocuSign eSignature REST API v2.1
+   - **Features:** Templates, webhooks, envelope tracking
+   - **Documentation:** https://developers.docusign.com
+
+3. **AI Service: Anthropic Claude 3.5 Sonnet**
+   - **Purpose:** Cost estimation, project analysis, image analysis
+   - **Pricing:** Pay-per-token (cost-effective for startup phase)
+   - **API:** Anthropic API (REST)
+   - **Features:** Vision, 200K context, structured outputs
+   - **Documentation:** https://docs.anthropic.com
+   - **Alternative:** OpenAI GPT-4 Vision
+
+4. **Cloud Storage: AWS S3**
+   - **Purpose:** Image storage, contract documents, backups
+   - **Pricing:** $0.023/GB/month for Standard storage
+   - **Buckets:**
+     - `ccc-project-images-prod` (project photos)
+     - `ccc-contracts-prod` (signed contracts)
+     - `ccc-backups-prod` (database backups)
+   - **Features:** Lifecycle policies, versioning, encryption
+
+5. **SMS Service: AWS SNS**
+   - **Purpose:** 2FA verification codes, payment notifications
+   - **Pricing:** $0.00645 per SMS (Canada)
+   - **Features:** Delivery reports, international support
+   - **Alternative:** Twilio (more expensive but better deliverability)
+
+6. **Email Service: AWS SES**
+   - **Purpose:** Transactional emails (verification, notifications, receipts)
+   - **Pricing:** $0.10 per 1,000 emails
+   - **Features:** High deliverability, bounce handling, templates
+   - **Alternative:** SendGrid (better for marketing emails)
+
+7. **Maps/Geocoding: Google Maps API**
+   - **Purpose:** Location services, address validation, distance calculation
+   - **Pricing:** $5-7 per 1,000 requests
+   - **Features:** Geocoding, Places API, Distance Matrix
+   - **Usage:** Tradesman service area, job location display
+
+### Recommended Integrations (Highly Beneficial)
+
+8. **Error Tracking: Sentry**
+   - **Purpose:** Real-time error monitoring and debugging
+   - **Pricing:** Free tier (5,000 events/month), then $26/month
+   - **Features:** Stack traces, release tracking, performance monitoring
+   - **Integration:** Next.js SDK
+
+9. **Analytics: Google Analytics 4 + Mixpanel**
+   - **Purpose:** User behavior tracking, conversion funnels
+   - **Pricing:** GA4 free, Mixpanel $20/month for startup plan
+   - **Events:** Project submissions, quote acceptances, registrations
+
+10. **Monitoring: AWS CloudWatch + Uptim Robot**
+    - **Purpose:** Infrastructure monitoring, uptime alerts
+    - **CloudWatch:** Included with AWS, logs and metrics
+    - **UptimeRobot:** Free tier for basic uptime monitoring
+
+### Optional Integrations (Future Enhancements)
+
+- **CDN Enhancement:** Cloudflare (additional DDoS protection, analytics)
+- **Search:** Elasticsearch or Algolia (if PostgreSQL full-text search insufficient)
+- **Customer Support:** Intercom or Zendesk (live chat, ticketing)
+- **Marketing Automation:** Mailchimp or HubSpot (email campaigns)
+- **Video Calls:** Twilio Video or Daily.co (virtual consultations)
+- **SMS Marketing:** Twilio or SimpleTexting (promotional messages)
 
 ---
 
