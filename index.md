@@ -1,6 +1,5 @@
 ---
-layout: home
-title: Construction Connect Canada
+layout: default
 ---
 
 # Construction Connect Canada
@@ -61,9 +60,24 @@ Our core competitive advantage is delivering detailed, AI-powered construction q
 
 **Total Time: 13-20 minutes**
 
+### Why 20 Minutes Matters
+
+**Client Benefits:**
+- Minimal time investment for valuable information
+- Can get quotes during lunch break
+- No need to schedule contractor visits for initial estimates
+- Can explore "what-if" scenarios quickly
+- Immediate budget reality check
+
+**Business Benefits:**
+- Lower barrier to entry = higher conversion
+- More estimates = more data to improve AI
+- Faster processing = more clients served
+- Satisfied clients are more likely to proceed to hiring
+
 ### Initial Focus (MVP)
 
-We're starting with three most common residential renovation projects to perfect our process:
+We're starting with three most common residential renovation projects:
 
 - **Kitchens** - High demand, well-defined scope, $5,000-$50,000+ projects
 - **Bathrooms** - Most common renovation type, strong market demand
@@ -89,6 +103,12 @@ We're starting with three most common residential renovation projects to perfect
    - Priority listing in search results
    - Enhanced profile with portfolio showcase
    - Advanced analytics and reporting
+
+**Future Revenue Opportunities:**
+- Premium features and featured listings
+- Lead guarantees (pay for performance)
+- Marketing support services
+- Training and certification programs
 
 ### Target Markets
 
@@ -153,7 +173,7 @@ We're starting with three most common residential renovation projects to perfect
 - Maintain organized project history
 
 **Project States:**
-- Draft → Estimating → Estimated → Posted → In Progress → Completed → Archived
+Draft → Estimating → Estimated → Posted → In Progress → Completed → Archived
 
 ### 4. Contract Generation & Management
 
@@ -161,16 +181,16 @@ We're starting with three most common residential renovation projects to perfect
 Construction Connect Canada provides standardized contract templates that formalize agreements between homeowner and contractor, protecting both parties and clearly defining project scope, costs, and terms.
 
 **Key Contract Components:**
-- **Project Description:** Detailed scope of work
-- **Cost Structure:** Base price, payment schedule, "not to exceed" amount
-- **Timeline:** Start date, completion date, schedule milestones
-- **Materials:** Specifications and upgrade pricing
-- **Permits & Inspections:** Responsibility and costs
-- **Insurance & Licensing:** Contractor requirements
-- **Warranties:** Workmanship and material warranties
-- **Change Orders:** Process for additional work
-- **Payment Terms:** Milestone-based structure
-- **Dispute Resolution:** Mediation and arbitration options
+- Project Description with detailed scope of work
+- Cost Structure with base price, payment schedule, and "not to exceed" amount
+- Timeline including start date, completion date, and schedule milestones
+- Materials specifications and upgrade pricing
+- Permits & Inspections responsibility and costs
+- Insurance & Licensing contractor requirements
+- Warranties for workmanship and materials
+- Change Orders process for additional work
+- Payment Terms with milestone-based structure
+- Dispute Resolution through mediation and arbitration
 
 **Payment Options:**
 - **Fixed Price:** Single total price with change orders priced separately
@@ -179,7 +199,7 @@ Construction Connect Canada provides standardized contract templates that formal
 - **Milestone-Based:** Payment tied to completion stages
 
 **"Not to Exceed" Protection:**
-Every contract includes a maximum price cap that prevents cost overruns without written authorization.
+Every contract includes a maximum price cap that prevents cost overruns without written authorization, providing budget certainty for clients while creating incentives for contractor efficiency.
 
 ---
 
@@ -198,7 +218,7 @@ Every contract includes a maximum price cap that prevents cost overruns without 
 
 1. **Registration** - Create account, upload credentials, verify
    - Start with Free Tier access to complete ONE job
-2. **Job Discovery** - Browse available jobs, filter by specialty/location/budget
+2. **Job Discovery** - Browse available jobs, filter by specialty, location, and budget
 3. **Quote Submission** - Submit competitive quote with timeline
 4. **Client Engagement** - Communicate with client, clarify details, confirm start date
 5. **Project Completion** - Complete work, receive payment (minus commission), get client review
@@ -221,7 +241,7 @@ Every contract includes a maximum price cap that prevents cost overruns without 
 
 ### For Tradesmen
 
-- Professional profile management
+- Professional profile management and credentials
 - Advanced job browser with filtering and alerts
 - Quote builder with templates
 - Business analytics and performance reporting
@@ -270,6 +290,7 @@ Every contract includes a maximum price cap that prevents cost overruns without 
 - Limited beta with 100 clients and 50 tradesmen
 - Perfect the 20-minute quote process
 - Gather feedback and iterate
+- Build case studies and testimonials
 
 ### Phase 2: Regional Expansion (Months 4-9)
 - Expand to Ottawa, Montreal, Vancouver, Calgary
@@ -285,14 +306,13 @@ Every contract includes a maximum price cap that prevents cost overruns without 
 
 ## Legal & Compliance
 
-**Important:** This platform operates as a marketplace facilitator and technology provider, not as a contractor or agent for either party. Users are advised to:
+**Important:** This platform operates as a marketplace facilitator and technology provider, not as a contractor or agent for either party. 
 
+Users are advised to:
 - Review all contracts with independent legal counsel
 - Verify contractor licenses and insurance independently
 - Understand that AI estimates are educational tools, not professional assessments
 - Recognize that platform has no liability for contractor performance or work quality
-
-See `technical_requirements.md` for detailed requirements.
 
 ---
 
