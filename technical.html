@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Requirements - Construction Connect Canada</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e90ff 0%, #1c7fd9 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .nav-button {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .nav-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: #1e90ff;
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #1e90ff;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #2d5aa3;
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            color: #555;
+            font-size: 1.1em;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin-bottom: 15px;
+            border-left: 4px solid #1e90ff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        th {
+            background-color: #1e90ff;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .section-intro {
+            background-color: #f0f7ff;
+            padding: 15px;
+            border-left: 4px solid #1e90ff;
+            margin-bottom: 20px;
+            border-radius: 3px;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            padding: 15px;
+            border-left: 4px solid #ffc107;
+            margin-bottom: 20px;
+            border-radius: 3px;
+        }
+
+        strong {
+            color: #1e90ff;
+        }
+
+        .back-button-bottom {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+            text-align: center;
+        }
+
+        .back-button-bottom a {
+            display: inline-block;
+            background-color: #1e90ff;
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+        }
+
+        .back-button-bottom a:hover {
+            background-color: #1c7fd9;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+
+            h3 {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔧 Technical Requirements</h1>
+        <p>Construction Connect Canada - Platform Architecture & Implementation Guide</p>
+        <a href="/" class="nav-button">← Back to Home</a>
+    </div>
+
+    <div class="container">
+        <h2>Technical Overview</h2>
+        <p>This document outlines the technical specifications and implementation requirements for Construction Connect Canada, a web-based platform built with React/Next.js that connects clients with tradesmen for construction services and provides AI-powered cost estimation.</p>
+
+        <h2>Executive Summary: Key Technical Decisions</h2>
+        <p>This section provides a quick reference for all major technology choices and architectural decisions.</p>
+
+        <h3>Platform Foundation</h3>
+        <ul>
+            <li><strong>Architecture:</strong> Modular Monolith (MVP) → Microservices (Scale)</li>
+            <li><strong>Frontend Framework:</strong> Next.js 14+ with React, TypeScript, Tailwind CSS</li>
+            <li><strong>Backend:</strong> Node.js/TypeScript with Next.js API routes</li>
+            <li><strong>Database:</strong> PostgreSQL 15+ with Prisma ORM</li>
+            <li><strong>Hosting:</strong> Amazon Web Services (AWS)</li>
+            <li><strong>Primary Region:</strong> AWS Canada (Central) for data sovereignty</li>
+        </ul>
+
+        <h3>Core Service Providers</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Service Category</th>
+                    <th>Provider</th>
+                    <th>Rationale</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Payment Processing</strong></td>
+                    <td><strong>Stripe</strong></td>
+                    <td>Best-in-class API, Stripe Connect for marketplace, 2.9% + $0.30 CAD</td>
+                </tr>
+                <tr>
+                    <td><strong>Digital Signatures</strong></td>
+                    <td><strong>DocuSign</strong></td>
+                    <td>Industry standard, legally binding in Canada, comprehensive features</td>
+                </tr>
+                <tr>
+                    <td><strong>AI Estimation</strong></td>
+                    <td><strong>Anthropic Claude 3.5 Sonnet</strong></td>
+                    <td>Superior reasoning, vision capabilities, 200K context, cost-effective</td>
+                </tr>
+                <tr>
+                    <td><strong>Object Storage</strong></td>
+                    <td><strong>AWS S3</strong></td>
+                    <td>Reliable, scalable, cost-effective ($0.023/GB/month)</td>
+                </tr>
+                <tr>
+                    <td><strong>CDN</strong></td>
+                    <td><strong>AWS CloudFront</strong></td>
+                    <td>Fast global delivery, integrated with S3</td>
+                </tr>
+                <tr>
+                    <td><strong>Cache & Queue</strong></td>
+                    <td><strong>Redis (ElastiCache)</strong></td>
+                    <td>Session storage, API caching, job queue (BullMQ)</td>
+                </tr>
+                <tr>
+                    <td><strong>SMS (2FA)</strong></td>
+                    <td><strong>AWS SNS</strong></td>
+                    <td>Cost-effective ($0.00645/SMS), reliable delivery</td>
+                </tr>
+                <tr>
+                    <td><strong>Email</strong></td>
+                    <td><strong>AWS SES</strong></td>
+                    <td>Low cost ($0.10/1000 emails), high deliverability</td>
+                </tr>
+                <tr>
+                    <td><strong>Maps/Location</strong></td>
+                    <td><strong>Google Maps API</strong></td>
+                    <td>Best-in-class for geocoding and location services</td>
+                </tr>
+                <tr>
+                    <td><strong>Error Tracking</strong></td>
+                    <td><strong>Sentry</strong></td>
+                    <td>Real-time debugging, performance monitoring</td>
+                </tr>
+                <tr>
+                    <td><strong>Analytics</strong></td>
+                    <td><strong>Google Analytics 4 + Mixpanel</strong></td>
+                    <td>User behavior, conversion tracking</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Infrastructure Stack (AWS)</h3>
+        <pre>Application Tier:    2-10x EC2 t3.medium (Auto-scaled, Load Balanced)
+Database Tier:       RDS PostgreSQL db.t3.medium (Multi-AZ, 100GB SSD)
+Cache/Queue Tier:    ElastiCache Redis cache.t3.small (2 nodes)
+Storage Tier:        S3 Standard (images, documents, backups)
+CDN:                 CloudFront (global edge locations)
+Background Jobs:     Separate EC2 instances or ECS (BullMQ workers)
+Monitoring:          CloudWatch, Sentry, UptimeRobot
+
+Estimated Cost:      $300-500/month for MVP/moderate traffic
+Scaling Cost:        $1,000-2,000/month at 10,000 active users</pre>
+
+        <h2>Technology Stack</h2>
+
+        <h3>Frontend</h3>
+        <ul>
+            <li><strong>Framework:</strong> React with Next.js 14+ (App Router)</li>
+            <li><strong>Language:</strong> TypeScript (strongly recommended for type safety)</li>
+            <li><strong>Styling:</strong> Tailwind CSS (rapid development, consistency, performance)</li>
+            <li><strong>State Management:</strong> React Context + Zustand (lightweight, scales well)</li>
+            <li><strong>Form Handling:</strong> React Hook Form (performance optimized, great DX)</li>
+            <li><strong>UI Components:</strong> shadcn/ui (accessible, customizable components)</li>
+        </ul>
+
+        <h3>Backend</h3>
+        <ul>
+            <li><strong>Architecture:</strong> Modular Monolith (initially), microservices-ready</li>
+            <li><strong>API Style:</strong> RESTful API with Next.js API routes</li>
+            <li><strong>Language:</strong> Node.js with TypeScript</li>
+            <li><strong>Framework:</strong> Next.js 14+ API Routes (unified codebase) + Express for standalone services</li>
+            <li><strong>Job Queue:</strong> BullMQ with Redis (for AI estimation processing)</li>
+            <li><strong>Real-time:</strong> WebSockets or Server-Sent Events (for notifications)</li>
+        </ul>
+
+        <h3>Database</h3>
+        <p><strong>Primary Database: PostgreSQL 15+</strong></p>
+        <div class="section-intro">
+            <strong>Rationale:</strong>
+            <ul style="margin-top: 10px;">
+                <li>ACID compliance critical for payment transactions</li>
+                <li>Excellent relational data modeling for users, projects, quotes</li>
+                <li>Advanced JSON support for flexible metadata</li>
+                <li>Strong full-text search capabilities</li>
+                <li>Proven scalability and reliability</li>
+                <li>Robust transaction handling for financial operations</li>
+            </ul>
+        </div>
+
+        <h2>Authentication & User Management</h2>
+        <h3>Requirements</h3>
+        <ul>
+            <li>Client accounts with secure authentication</li>
+            <li>Tradesman accounts with identity verification</li>
+            <li>Profile management for both user types</li>
+            <li>Role-based access control (RBAC)</li>
+            <li>Two-factor authentication via telephone for both user types</li>
+        </ul>
+
+        <h3>User Roles & Permissions</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Role</th>
+                    <th>Permissions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Client</strong></td>
+                    <td>Create projects, upload images, view estimates, post jobs, review quotes, make payments, manage profile</td>
+                </tr>
+                <tr>
+                    <td><strong>Tradesman</strong></td>
+                    <td>Browse jobs, submit quotes, view client requirements, manage profile, update credentials, track awarded jobs</td>
+                </tr>
+                <tr>
+                    <td><strong>Admin</strong></td>
+                    <td>Full access, user management, platform configuration, analytics, dispute resolution</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Core Feature Implementation</h2>
+
+        <h3>1. Payment Processing - Stripe</h3>
+        <p><strong>Why Stripe over PayPal:</strong></p>
+        <ul>
+            <li>Best-in-class API with comprehensive, well-documented developer experience</li>
+            <li>Stripe Connect purpose-built for marketplace platforms</li>
+            <li>Superior webhook reliability and testing tools</li>
+            <li>Native subscription management for tradesman memberships</li>
+            <li>More transparent pricing with no hidden fees</li>
+            <li>Easier to implement split payments (platform commission + tradesman payout)</li>
+        </ul>
+
+        <div class="highlight">
+            <strong>Payment Flow:</strong> Client pays total (project cost + platform commission) via Stripe Payment Intent. Upon completion, Stripe automatically transfers project cost to tradesman's account and platform retains commission.
+        </div>
+
+        <h3>2. Digital Signatures - DocuSign</h3>
+        <p><strong>Why DocuSign:</strong></p>
+        <ul>
+            <li>Industry standard for construction contracts</li>
+            <li>Legal validity recognized in Canadian courts</li>
+            <li>Professional appearance enhances platform credibility</li>
+            <li>Comprehensive API for full automation</li>
+            <li>Audit trail and tamper-evident seals</li>
+        </ul>
+
+        <h3>3. AI-Powered Cost Estimation</h3>
+        <p><strong>Selected Service: Anthropic Claude 3.5 Sonnet</strong></p>
+        <p><strong>Why Anthropic Claude:</strong></p>
+        <ul>
+            <li>Superior reasoning for structured cost analysis and breakdowns</li>
+            <li>200K token context window (vs GPT-4's 128K)</li>
+            <li>Excellent vision capabilities for analyzing project images</li>
+            <li>Reliable JSON structured outputs for cost breakdowns</li>
+            <li>Competitive pricing, cost-effective for startup phase</li>
+            <li>No data residency issues for Canadian operations</li>
+        </ul>
+
+        <h2>Performance & Scalability</h2>
+
+        <h3>Optimization Strategies</h3>
+        <ul>
+            <li><strong>Database:</strong> Connection pooling, query optimization, proper indexing, read replicas</li>
+            <li><strong>Caching:</strong> Redis for sessions, API response caching, CloudFront CDN</li>
+            <li><strong>API:</strong> Rate limiting, pagination, request optimization</li>
+            <li><strong>Frontend:</strong> Code splitting, lazy loading, service workers, image optimization</li>
+        </ul>
+
+        <h3>Scalability Targets</h3>
+        <ul>
+            <li>Support 10,000+ concurrent users</li>
+            <li>Handle 100+ simultaneous AI estimation requests</li>
+            <li>Store millions of projects and images</li>
+            <li>Sub-second page load times</li>
+            <li>99.9% uptime SLA</li>
+        </ul>
+
+        <h2>Security</h2>
+
+        <h3>Application Security</h3>
+        <ul>
+            <li><strong>Authentication:</strong> Secure password hashing (bcrypt), JWT tokens, refresh token rotation</li>
+            <li><strong>Authorization:</strong> Role-based access control, resource-level permissions, API endpoint protection</li>
+            <li><strong>Data Protection:</strong> Encryption at rest and in transit (TLS/HTTPS), secure environment management</li>
+        </ul>
+
+        <h3>Payment Security</h3>
+        <ul>
+            <li>PCI DSS compliance (via Stripe)</li>
+            <li>Never store raw credit card data</li>
+            <li>Tokenization for saved payment methods</li>
+            <li>3D Secure for fraud prevention</li>
+            <li>Secure webhook signature verification</li>
+        </ul>
+
+        <h3>Two-Factor Authentication</h3>
+        <ul>
+            <li>SMS-based verification codes</li>
+            <li>TOTP support (optional: Google Authenticator)</li>
+            <li>Backup codes for account recovery</li>
+            <li>Rate limiting on verification attempts</li>
+        </ul>
+
+        <h2>Third-Party Integrations</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Purpose</th>
+                    <th>Pricing</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Stripe</strong></td>
+                    <td>Payment processing, subscriptions, marketplace</td>
+                    <td>2.9% + $0.30 CAD per transaction</td>
+                </tr>
+                <tr>
+                    <td><strong>DocuSign</strong></td>
+                    <td>Contract generation and e-signatures</td>
+                    <td>~$40-60 USD/month</td>
+                </tr>
+                <tr>
+                    <td><strong>Anthropic Claude</strong></td>
+                    <td>AI-powered cost estimation</td>
+                    <td>Pay-per-token (cost-effective)</td>
+                </tr>
+                <tr>
+                    <td><strong>AWS S3</strong></td>
+                    <td>Image and document storage</td>
+                    <td>$0.023/GB/month</td>
+                </tr>
+                <tr>
+                    <td><strong>AWS SNS</strong></td>
+                    <td>SMS for 2FA and notifications</td>
+                    <td>$0.00645 per SMS</td>
+                </tr>
+                <tr>
+                    <td><strong>AWS SES</strong></td>
+                    <td>Transactional emails</td>
+                    <td>$0.10 per 1,000 emails</td>
+                </tr>
+                <tr>
+                    <td><strong>Google Maps API</strong></td>
+                    <td>Location services and geocoding</td>
+                    <td>$5-7 per 1,000 requests</td>
+                </tr>
+                <tr>
+                    <td><strong>Sentry</strong></td>
+                    <td>Error tracking and monitoring</td>
+                    <td>Free tier or $26/month</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Deployment & Operations</h2>
+
+        <h3>Recommended Deployment Strategy</h3>
+        <ul>
+            <li>CI/CD pipeline (GitHub Actions, GitLab CI, or CircleCI)</li>
+            <li>Automated testing before deployment</li>
+            <li>Staging environment for testing</li>
+            <li>Blue-green deployment or canary releases</li>
+            <li>Database migration automation</li>
+            <li>Environment variable management via AWS Secrets Manager</li>
+        </ul>
+
+        <h3>Monitoring & Logging</h3>
+        <ul>
+            <li>Application performance monitoring (APM)</li>
+            <li>Error tracking and alerting (Sentry)</li>
+            <li>Log aggregation (CloudWatch)</li>
+            <li>Uptime monitoring (UptimeRobot)</li>
+            <li>Custom metrics and dashboards</li>
+        </ul>
+
+        <h2>Development Roadmap</h2>
+
+        <h3>Phase 1: Foundation (Weeks 1-4)</h3>
+        <ul>
+            <li>Finalize tech stack decisions</li>
+            <li>Set up development environment</li>
+            <li>Configure hosting infrastructure</li>
+            <li>Set up database and schema</li>
+            <li>Implement authentication system</li>
+            <li>Build basic user registration/login</li>
+        </ul>
+
+        <h3>Phase 2: Core Features (Weeks 5-10)</h3>
+        <ul>
+            <li>Develop project submission forms</li>
+            <li>Implement image upload functionality</li>
+            <li>Integrate payment processor</li>
+            <li>Build job queue for async processing</li>
+            <li>Integrate AI estimation service</li>
+            <li>Develop project management dashboard</li>
+        </ul>
+
+        <h3>Phase 3: Marketplace (Weeks 11-14)</h3>
+        <ul>
+            <li>Build tradesman portal</li>
+            <li>Implement quote submission system</li>
+            <li>Develop job browsing and filtering</li>
+            <li>Build notification system</li>
+            <li>Implement membership tiers</li>
+        </ul>
+
+        <h3>Phase 4: Polish & Launch (Weeks 15-18)</h3>
+        <ul>
+            <li>Performance optimization</li>
+            <li>Security audit</li>
+            <li>Load testing</li>
+            <li>Bug fixes and refinements</li>
+            <li>Documentation and beta testing</li>
+            <li>Production launch</li>
+        </ul>
+
+        <div class="back-button-bottom">
+            <a href="/">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

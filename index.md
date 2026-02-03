@@ -6,6 +6,8 @@ layout: default
 
 Building connections in the construction industry across Canada.
 
+**[📋 View Technical Requirements →](technical.html)**
+
 ## Executive Summary
 
 Construction Connect Canada is a nationwide digital platform that revolutionizes how Canadians connect with construction professionals. By combining AI-powered cost estimation with a curated marketplace of verified tradesmen, we provide homeowners with transparency, speed, and confidence in their construction projects while creating a steady stream of qualified leads for contractors.
