@@ -1,6 +1,6 @@
 title: Construction Connect Canada
 description: Building connections in the construction industry
-theme: cayman
+remote_theme: pages-themes/cayman@v0.2.0
 
 author:
   name: Christopher Larsen
@@ -8,6 +8,7 @@ author:
 
 # Enable plugins
 plugins:
+  - jekyll-remote-theme
   - jekyll-feed
   - jekyll-seo-tag
 
